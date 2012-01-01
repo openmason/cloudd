@@ -1,10 +1,13 @@
 {
   "name": "cloudd",
   "description": "node cloud engine",
-  "homepage": "http://truepattern.com/cloudd",
-  "version": "0.0.1",
+  "homepage": "https://github.com/truepattern/cloudd",
+  "version": "0.0.2",
   "author": "truepattern <admin@truepattern.com>",
-  "dependencies": [],
+  "dependencies": {
+    "underscore": ">= 1.2.3",
+    "kue"       : ">= 0.3.3"
+  },
   "devDependencies": [],
   "keywords": ["cloudd", "job", "scheduler", "workflow", "queue", "task"],
   "repository": {"type":"git", "url": "git://github.com/truepattern/cloudd"},
