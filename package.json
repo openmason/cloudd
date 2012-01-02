@@ -2,10 +2,11 @@
   "name": "cloudd",
   "description": "node cloud engine",
   "homepage": "https://github.com/truepattern/cloudd",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "truepattern <admin@truepattern.com>",
   "dependencies": {
     "underscore": ">= 1.2.3",
+    "winston"   : ">= 0.5.9",
     "kue"       : ">= 0.3.3",
     "cron"      : ">= 0.1.3"
   },

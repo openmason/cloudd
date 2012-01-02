@@ -16,8 +16,8 @@ var world = {
     console.log('world');
     done();
   },
-  done:function() {
-    console.log('world -- task successfuly completed : #' + this.id);
+  done:function(job) {
+    console.log('[world] -- task successfuly completed : #' + job.id);
   }
 };
 
@@ -35,6 +35,11 @@ var flow = [
   {id:'hello', task: hello, parent:'root'},
   {id:'world', task: world, parent:'root'}
 ];
+
+
+// enable the following to see the info messages on console
+//winston=require('winston');
+//winston.default.transports.console.level = 'info';
 
 cloudd.submit('test-one',flow);
 cloudd.startapp(3000);
