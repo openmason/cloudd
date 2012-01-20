@@ -41,6 +41,13 @@ var flow = [
 //winston=require('winston');
 //winston.default.transports.console.level = 'info';
 
-cloudd.submit('test-one',flow);
+// for submission of job once, use this API
+//cloudd.submit('test-one',flow);
+
+// for submission of job based on cron-format use this API
+// in this case, hw called every minute
+cloudd.submitAt('0 * * * * *', 'hw', flow);
+
+// this would start the UI for task management
 cloudd.startapp(3000);
 
