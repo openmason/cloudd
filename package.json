@@ -1,6 +1,6 @@
 {
   "name": "cloudd",
-  "description": "node cloud engine",
+  "description": "node based job execution engine",
   "homepage": "https://github.com/openmason/cloudd",
   "version": "0.2.0",
   "author": "el aras <openmason@gmail.com>",
@@ -15,7 +15,7 @@
     "mocha"     : ">= 1.7.4",
     "should"    : ">= 1.2.1"
   },
-  "keywords": ["cloudd", "job", "cluster", "scheduler", "workflow", "queue", "task"],
+  "keywords": ["cloudd", "job", "DAG", "cluster", "scheduler", "workflow", "queue", "task"],
   "repository": {"type":"git", "url": "git://github.com/openmason/cloudd"},
   "main": "index",
   "bin": { "cloudd": "./bin/cloudd" },
