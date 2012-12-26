@@ -19,29 +19,160 @@ describe('job', function() {
   // - fetch (check the dag state)
   describe('Job object', function() {
     it('without jobid', function(done) {
-      var jid;
+      var jid, j;
       try {
-        var j = new job.Job(jid, {'jobs': {}});
-        should.not.exist(j);
+        j = new job.Job(jid, {'jobs': {}});
       }
       catch(err) {
         should.exist(err);
       }
+      should.not.exist(j);
       done();
     });
     it('without config', function(done) {
       var jid = '12346';
       var config;
+      var j;
       try {
-        var j = new job.Job(jid, config);
-        should.not.exist(t);
+        j = new job.Job(jid, config);
       }
       catch(err) {
         should.exist(err);
       }
-      // lets omit config 'jobs' section
+      should.not.exist(j);
+      done();
+    });
+    it('config - missing jobs section', function(done) {
+      var jid = '12346';
+      var config={'name':'test job', 'dependencies':[{'link1':{parent:['A','B'],child:['C']}}]};
+      var j;
+      try {
+        j = new job.Job(jid, config);
+      }
+      catch(err) {
+        should.exist(err);
+      }
+      should.not.exist(j);
+      done();
+    });
+    it('config - missing task within job', function(done) {
+      var jid = '12346';
+      var config={'name':'test job', 
+                  'jobs': {'A':{name:'hello'} },
+                  'dependencies':[{'link1':{parent:['A'],child:['C']}}]};
+      var j;
+      try {
+        j = new job.Job(jid, config);
+      }
+      catch(err) {
+        should.exist(err);
+      }
+      should.not.exist(j);
+      done();
+    });
+    it('config - missing dependencies', function(done) {
+      var jid = '12346';
+      var config={'name':'test job',
+                  'jobs': {'A':{name:'hello'} } };
+      var j;
+      try {
+        j = new job.Job(jid, config);
+      }
+      catch(err) {
+        should.exist(err);
+      }
+      should.not.exist(j);
+      done();
+    });
+    it('config - circular dependencies', function(done) {
+      var jid = '12346';
+      var config={'name':'test job', 
+                  'jobs': {'A':{name:'hello'}, 'B':{name:'b'} },
+                  'dependencies':[{'link1':{parent:['A'],child:['B']}},
+                                  {'link2':{parent:['B'],child:['A']}}
+                                 ]};
+      var j;
+      try {
+        j = new job.Job(jid, config);
+      }
+      catch(err) {
+        should.exist(err);
+      }
+      should.not.exist(j);
+      done();
+    });
+
+    it('isTaskReady', function(done) {
+      var jid = '12346';
+      var config={'name':'test job', 
+                  'jobs': {'A':{name:'hello'}, 'B':{name:'b'} },
+                  'dependencies':[{'link1':{parent:['A'],child:['B']}}
+                                 ]
+                 };
+      var j;
+      try {
+        j = new job.Job(jid, config);
+        assert.equal(j.isTaskReady('A'), true);
+        assert.equal(j.isTaskReady('B'), false);
+        assert.equal(j.isTaskReady('Y'), true);
+      }
+      catch(err) {
+        should.not.exist(err);
+      }
+      should.exist(j);
+      done();
+    });
+
+    it('isComplete and fetchTasks', function(done) {
+      var jid = '12346';
+      var config={'name':'test job', 
+                  'jobs': {'A':{executable:'echo a'}, 'B':{executable:'echo b'} },
+                  'dependencies':[{'link1':{parent:['A'],child:['B']}}
+                                 ]
+                 };
+      var j;
+      try {
+        j = new job.Job(jid, config);
+        assert.equal(j.isComplete(), false);
+        var tsk = j.fetch();
+        should.exist(tsk);
+        assert.equal(j.isComplete(), false);
+        should.not.exist(j.fetch());
+        j.setTaskResult(tsk);
+        tsk = j.fetch();
+        should.exist(tsk);
+        assert.equal(j.isComplete(), true);
+      }
+      catch(err) {
+        should.not.exist(err);
+      }
+      should.exist(j);
+      done();
+    });
+
+  });
+
+  // JobList
+  // - submit
+  // - check _processJob
+  describe('JobList', function() {
+    it('submit job', function(done) {
+      var jid = '12346';
+      var config={'name':'test job', 
+                  'jobs': {'A':{executable:'echo a'}, 'B':{executable:'echo b'} },
+                  'dependencies':[{'link1':{parent:['A'],child:['B']}}
+                                 ]
+                 };
+      var jl = new job.JobList();
+      assert.deepEqual(Object.keys(jl.jobs),[]);
+      assert.equal(jl.taskQ.q.size(),0);
+      jl.submit(jid, config);
+      assert.deepEqual(Object.keys(jl.jobs),[jid]);
+      assert.equal(jl.taskQ.q.size(),0);
+      jl.process();
+      assert.deepEqual(Object.keys(jl.jobs),[jid]);
+      assert.equal(jl.taskQ.q.size(),0);
       done();
     });
   });
-
 });
