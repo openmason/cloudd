@@ -12,6 +12,6 @@ var flow = [
 
 // submit job at given cron config
 // lets try submitting one every minute
-cloudd.submitAt('0 * * * * *', 'feeder', flow);
+cloudd.submitAt('* * * * * *', 'feeder', flow);
 cloudd.startapp(3000);
 

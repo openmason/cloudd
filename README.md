@@ -21,3 +21,4 @@ To enable full debug logs, add these two lines to your code
 
     winston=require('winston');
     winston.default.transports.console.level = 'info';
+
