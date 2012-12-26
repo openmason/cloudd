@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/truepattern/cloudd.png)](http://travis-ci.org/truepattern/cloudd)
 # cloudd                                                  
 node.js cloud engine                                                 
 
