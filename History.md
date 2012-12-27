@@ -1,4 +1,5 @@
-# release 0.2.0
+# release 0.2.1
+ * javascript modules can be loaded from job config
  * cloudd with new structures ready on npm
  * major change, kue is dropped and new data structures introduced
  
