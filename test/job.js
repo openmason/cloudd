@@ -141,6 +141,8 @@ describe('job', function() {
         j.setTaskResult(tsk);
         tsk = j.fetch();
         should.exist(tsk);
+        assert.equal(j.isComplete(), false);
+        j.setTaskResult(tsk);
         assert.equal(j.isComplete(), true);
       }
       catch(err) {
