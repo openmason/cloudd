@@ -1,9 +1,10 @@
 [![build status](https://secure.travis-ci.org/openmason/cloudd.png)](http://travis-ci.org/openmason/cloudd)
 # cloudd                                                  
-node.js cloud engine                                                 
+node.js cloud engine 
+Apart from all the buzz words, key aspect of this software is to specify set of tasks that are interdependent in a config file (similar to DAG input on condor) and run them.
 
 # Basics
- * Task - is an smallest unit of processing, should be idempotent
+ * Task - is the smallest unit of execution (preferrable should be an idempotent task)
  * Job - collection of tasks with dependencies (acyclic)
 
 # Features 
