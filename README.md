@@ -30,25 +30,25 @@ node.js cloud engine
       * `My` would be run only after `Hello`
       * `World` would be run only after `My`
   * Sample yaml config file would look like (see in examples/hellomyworld.yaml)
-```yaml
-name: Hello World
-description:
-  Sample 'hello my world' job
-jobs:
-  my: 
-    executable: echo "my"
-  hello: 
-    executable: echo "hello"
-  world:
-    executable: echo "world"
-dependencies:
-  - my-world:
-     parent: [my]
-     child: [world]
-  - hello-my:
-     parent: [hello]
-     child: [my]
-```
+
+        name: Hello World
+        description:
+          Sample 'hello my world' job
+        jobs:
+          my: 
+            executable: echo "my"
+          hello: 
+            executable: echo "hello"
+          world:
+            executable: echo "world"
+        dependencies:
+          - my-world:
+             parent: [my]
+             child: [world]
+          - hello-my:
+             parent: [hello]
+             child: [my]
+
  * To run this example
  
     # terminal 1
