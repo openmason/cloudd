@@ -52,7 +52,7 @@ node.js cloud engine
 ```
 
  * To run this example
- 
+
     # terminal 1
     cloudd server
     
