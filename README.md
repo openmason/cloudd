@@ -32,33 +32,34 @@ node.js cloud engine
   * Sample yaml config file would look like (see in examples/hellomyworld.yaml)
 
 ```yaml
-        name: Hello World
-        description:
-          Sample 'hello my world' job
-        jobs:
-          my: 
-            executable: echo "my"
-          hello: 
-            executable: echo "hello"
-          world:
-            executable: echo "world"
-        dependencies:
-          - my-world:
-             parent: [my]
-             child: [world]
-          - hello-my:
-             parent: [hello]
-             child: [my]
+name: Hello World
+description:
+  Sample 'hello my world' job
+jobs:
+  my:
+    executable: echo "my"
+  hello:
+    executable: echo "hello"
+  world:
+    executable: echo "world"
+dependencies:
+  - my-world:
+     parent: [my]
+     child: [world]
+  - hello-my:
+     parent: [hello]
+     child: [my]
 ```
 
- * To run this example
+## To try this example
+Have two terminals, one for the server and another one for submitting the job
 
     # terminal 1
     cloudd server
     
     # terminal 2
     cloudd examples/hellomyworld.yaml
-    
+
 ## Usage
 To run the server
     
