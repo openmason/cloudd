@@ -1,4 +1,129 @@
 #!/usr/bin/env node
 
-var cloud = require('../');
+/**
+ * cloudd - copyright(c) 2012 openmason.
+ *
+ * MIT Licensed
+ */
+var cloudd  = require('..');
+var to      = require('to');
+var _       = require('underscore');
+var winston = require('winston');
 
+// cloudd server  - start the cloudd service
+// cloudd ps      - show current tasks
+// cloudd tasks   - show current tasks queued for execution (excludes running tasks)
+// cloudd jobs    - show current jobs
+// cloudd submit job-config-file  - submit a new job
+
+winston.default.transports.console.level = 'info';
+var _versionString = 'cloudd v'+to.version + '\nnode.js cloud engine';
+
+var cmdport = 'tcp://127.0.0.1:12345';
+var zmq = require('zmq');
+console.log(_versionString);
+var launch='none';
+if(process.argv.length>2) {
+  launch = process.argv[2];
+}
+if(launch=='jobs' || launch=='ps' || launch=='tasks' || launch=='submit') {
+  var csocket = zmq.socket('req');
+  csocket.identity = 'client' + process.pid;
+  csocket.connect(cmdport);
+  if(launch=='submit') {
+    csocket.send(launch+' '+process.argv[3]+' '+process.argv[4]);
+  } else {
+    csocket.send(launch);
+  }
+  csocket.on('message', function(data) {
+    var objs = JSON.parse(data.toString());
+    switch(launch) {
+      case 'ps'   : _ps(objs); break;
+      case 'tasks': _tasks(objs); break;
+      case 'jobs' : _jobs(objs);break;
+      default     : console.log(objs.result); break;
+    }
+    process.exit(0);
+  });
+} else if(launch=='server') {
+  cloudd.start(cmdport);
+} else {
+  console.log("cloudd server  - start the cloudd service");
+  console.log("cloudd ps      - show current tasks");
+  console.log("cloudd tasks   - show current tasks queued for execution (excludes running tasks)");
+  console.log("cloudd jobs    - show current jobs");
+  console.log("cloudd submit job-config-file.yaml  - submit a new job");
+  process.exit(0);
+}
+
+// --------------- private methods
+
+var sprintf = require('sprintf').sprintf;
+var formatstr='  %-12s   %-12s   %-32s';
+var hoststr='   %-7s   %s';
+var formatdecor='%14s_%14s_%34s';
+var hostdecor='_%9s_%16s';
+var headerstr='  %-12s   %-24s   %-5s   %-32s   %s';
+var headerdecor='%14s_%26s_%7s_%34s_%9s_%40s';
+
+function _taskHeader()
+{
+  console.log(sprintf(formatstr, "job", "task", "command"));
+  var hdr=sprintf(formatdecor, ' ', ' ', ' ');
+  hdr=hdr.replace(/ /g,'-').replace(/_/g,' ');
+  console.log(hdr);
+}
+
+function _jobsHeader()
+{
+  console.log(sprintf(headerstr, "job", "next task", "%", "name", "description"));
+  var hdr=sprintf(headerdecor, ' ', ' ', ' ',' ',' ',' ');
+  hdr=hdr.replace(/ /g,'-').replace(/_/g,' ');
+  console.log(hdr);
+}
+
+// prints list of current jobs
+function _jobs(jobs) {
+  if(_.size(jobs)>0) {
+    _jobsHeader();
+    _.each(jobs, function(job) { 
+      console.log(sprintf(headerstr,job.id, job.next, Number(job.progress*100).toFixed(0), job.name, job.description));
+    });
+  } else {
+    console.log('** no jobs **');
+  }
+}
+
+function _psHeader()
+{
+  console.log(sprintf(formatstr+hoststr, "job", "task", "command", "pid", "host"));
+  var hdr=sprintf(formatdecor+hostdecor, ' ', ' ', ' ', ' ', ' ');
+  hdr=hdr.replace(/ /g,'-').replace(/_/g,' ');
+  console.log(hdr);
+}
+
+// prints list of current items in taskQ
+function _tasks(tasks) {
+  if(_.size(tasks)>0) {
+    _taskHeader();
+    _.each(tasks, function(task) { 
+      console.log(sprintf(formatstr, task.job, task.id, task.exec));
+    });
+  } else {
+    console.log('** no tasks ready for execution **');
+  }
+}
+
+// prints list of current running processes
+function _ps(tasks)
+{
+  if(_.size(tasks)>0) {
+    _psHeader();
+    _.each(tasks, function(task) {
+      console.log(sprintf(formatstr+hoststr, task.job, task.id, task.exec, 
+                          task.process.pid, task.process.host));
+    });
+  } else {
+    console.log('** no tasks running **');
+  }
+}
