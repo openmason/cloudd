@@ -1,4 +1,5 @@
 # release 0.2.0
+ * cloudd with new structures ready on npm
  * major change, kue is dropped and new data structures introduced
  
 # release 0.1.0

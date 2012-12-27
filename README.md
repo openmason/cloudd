@@ -2,24 +2,77 @@
 # cloudd                                                  
 node.js cloud engine                                                 
 
-# Features                                                 
- * allows user to define a workflow (set of tasks together constitute a job)
-    1. Job `HelloWorld` could comprise of two tasks
-      * `Hello` Task
-      * `World` Task, this step to be executed only on successful completion of `Hello`
-      * Any time you run `HelloWorld`, both these tasks would be run one after another                    
+# Basics
+ * Task - is an smallest unit of processing, should be idempotent
+ * Job - collection of tasks with dependencies (acyclic)
+
+# Features 
+ * job execution engine
+ * Task could be a javascript unit or executable that would be exec'ed
+ * Command line to check the status of jobs, tasks and current running processes
+ * Command line Submit of jobs
  * instantiate jobs _cron_ style
- * see examples for couple of real world examples 
+ * Good unit test coverage
 
-**ALPHA product, use at your risk**
+## Upcoming
+ * Failure of tasks to be handled
+ * Job load balancing among cloudd hosts
+ * Persistence of state
+ * clustering among cloudd hosts
+ 
+# Example
+ * Lets see how to define a Hello My World Job
+    1. Job `Hello My World` comprise of three tasks
+      * `Hello` Task
+      * `My` Task
+      * `World` Task
+    2. Dependencies
+      * `My` would be run only after `Hello`
+      * `World` would be run only after `My`
+  * Sample yaml config file would look like (see in examples/hellomyworld.yaml)
+```yaml
+name: Hello World
+description:
+  Sample 'hello my world' job
+jobs:
+  my: 
+    executable: echo "my"
+  hello: 
+    executable: echo "hello"
+  world:
+    executable: echo "world"
+dependencies:
+  - my-world:
+     parent: [my]
+     child: [world]
+  - hello-my:
+     parent: [hello]
+     child: [my]
+```
+ * To run this example
+ 
+    # terminal 1
+    cloudd server
+    
+    # terminal 2
+    cloudd examples/hellomyworld.yaml
+    
+## Usage
+To run the server
+    
+    cloudd server
+    
+Command line utilities
 
-## API's
- 1. cloudd.submit (identifier, workflow-definition) - submit job once
- 1. cloudd.submitAt(cron-config, identifier, workflow-definition) - submit job as specified by cron-config
-
-## Debug logs
-To enable full debug logs, add these two lines to your code
-
-    winston=require('winston');
-    winston.default.transports.console.level = 'info';
-
+    # to show current running tasks
+    cloudd ps
+    
+    # to show total tasks that are ready to run (ordered list)
+    cloudd tasks
+    
+    # to show total jobs in the system (non-completed)
+    cloudd jobs
+    
+    # to submit a new job
+    cloudd submit sample-job-file.yaml
+    
