@@ -31,6 +31,7 @@ node.js cloud engine
       * `World` would be run only after `My`
   * Sample yaml config file would look like (see in examples/hellomyworld.yaml)
 
+```yaml
         name: Hello World
         description:
           Sample 'hello my world' job
@@ -48,6 +49,7 @@ node.js cloud engine
           - hello-my:
              parent: [hello]
              child: [my]
+```
 
  * To run this example
  
