@@ -48,6 +48,3 @@ winston.default.transports.console.level = 'info';
 // in this case, hw called every minute
 cloudd.submitAt('* * * * * *', 'hw', flow);
 
-// this would start the UI for task management
-cloudd.startapp(3000);
-

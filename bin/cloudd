@@ -14,7 +14,8 @@ var winston = require('winston');
 // cloudd ps      - show current tasks
 // cloudd tasks   - show current tasks queued for execution (excludes running tasks)
 // cloudd jobs    - show current jobs
-// cloudd submit job-config-file  - submit a new job
+// cloudd submit job-id job-config-file  - submit a new job
+// cloudd cron job-id "cron-str" job-config-file  - submit a new cron job
 
 winston.default.transports.console.level = 'info';
 var _versionString = 'cloudd v'+to.version + '\nnode.js cloud engine';
@@ -26,15 +27,20 @@ var launch='none';
 if(process.argv.length>2) {
   launch = process.argv[2];
 }
-if(launch=='jobs' || launch=='ps' || launch=='tasks' || launch=='submit') {
+if(launch=='jobs' || launch=='ps' || launch=='tasks' || launch=='submit' || launch=='cron') {
   var csocket = zmq.socket('req');
   csocket.identity = 'client' + process.pid;
   csocket.connect(cmdport);
+  var cmd = {command:launch};
   if(launch=='submit') {
-    csocket.send(launch+' '+process.argv[3]+' '+process.argv[4]);
-  } else {
-    csocket.send(launch);
+    cmd['id']=process.argv[3];
+    cmd['config']=process.argv[4];
+  } else if(launch=='cron') {
+    cmd['cron']=process.argv[3];
+    cmd['id']=process.argv[4];
+    cmd['config']=process.argv[5];
   }
+  csocket.send(JSON.stringify(cmd));
   csocket.on('message', function(data) {
     var objs = JSON.parse(data.toString());
     switch(launch) {
@@ -52,19 +58,20 @@ if(launch=='jobs' || launch=='ps' || launch=='tasks' || launch=='submit') {
   console.log("cloudd ps      - show current tasks");
   console.log("cloudd tasks   - show current tasks queued for execution (excludes running tasks)");
   console.log("cloudd jobs    - show current jobs");
-  console.log("cloudd submit job-config-file.yaml  - submit a new job");
+  console.log("cloudd submit job-id job-config-file.yaml  - submit a new job");
+  console.log("cloudd cron 'cron-spec' job-id job-config-file.yaml  - submit a new cron job");
   process.exit(0);
 }
 
 // --------------- private methods
 
 var sprintf = require('sprintf').sprintf;
-var formatstr='  %-12s   %-12s   %-32s';
+var formatstr='  %-24s   %-12s   %-32s';
 var hoststr='   %-7s   %s';
-var formatdecor='%14s_%14s_%34s';
+var formatdecor='%26s_%14s_%34s';
 var hostdecor='_%9s_%16s';
-var headerstr='  %-12s   %-24s   %-5s   %-32s   %s';
-var headerdecor='%14s_%26s_%7s_%34s_%9s_%40s';
+var headerstr='  %-24s   %-24s   %-5s   %-32s   %s';
+var headerdecor='%26s_%26s_%7s_%34s_%9s_%40s';
 
 function _taskHeader()
 {
