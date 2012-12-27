@@ -1,50 +1,14 @@
-var cloudd = require('../index');
-
 // hello 'task' definition
-var hello = {
-  task: function(job, done) {
-    job.log('hello task log :' + job.title);
-    console.log('hello');
-    done();
-  }
+exports.hello = function(task, done) {
+  task.log.push('hello task log :' + task.id + '-' + task.job);
+  console.log('hello');
+  done();
 };
 
 // world 'task' definition
-var world = {
-  task: function(job, done) {
-    job.log('world task log :' + job.title);
-    console.log('world');
-    done();
-  },
-  done:function(job) {
-    console.log('[world] -- task successfuly completed : #' + job.id);
-  }
+exports.world = function(task, done) {
+  var now=new Date();
+  task.log.push('world logged at:'+now);
+  console.log('world');
+  done();
 };
-
-// workflow definition
-// both the tasks are fired simultaneously, as they both
-// are from root
-//    root --> 'hello'
-//         L-> 'world'
-//
-// to make it serial:
-//   root -> 'hello' -> 'world'
-// change the config for world to parent:'hello'
-//
-var flow = [
-  {id:'hello', task: hello, parent:'root'},
-  {id:'world', task: world, parent:'hello'}
-];
-
-
-// enable the following to see the info messages on console
-var winston=require('winston');
-winston.default.transports.console.level = 'info';
-
-// for submission of job once, use this API
-//cloudd.submit('test-one',flow);
-
-// for submission of job based on cron-format use this API
-// in this case, hw called every minute
-cloudd.submitAt('* * * * * *', 'hw', flow);
-

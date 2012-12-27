@@ -1,0 +1,16 @@
+name: Hello World
+description:
+  Sample 'hello world' job with javascript
+jobs:
+  hello: 
+    javascript:
+      lib: ../examples/helloworld
+      method: hello
+  world:
+    javascript:
+      lib: ../examples/helloworld
+      method: world
+dependencies:
+  - my-world:
+     parent: [hello]
+     child: [world]

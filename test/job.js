@@ -102,10 +102,95 @@ describe('job', function() {
       done();
     });
 
-    it('isTaskReady', function(done) {
+    it('config - missing executable', function(done) {
       var jid = '12346';
       var config={'name':'test job', 
                   'jobs': {'A':{name:'hello'}, 'B':{name:'b'} },
+                  'dependencies':[{'link1':{parent:['A'],child:['B']}}
+                                 ]};
+      var j;
+      try {
+        j = new job.Job(jid, config);
+      }
+      catch(err) {
+        should.exist(err);
+      }
+      should.not.exist(j);
+      done();
+    });
+
+    it('config - both executable/javascript specified', function(done) {
+      var jid = '12346';
+      var config={'name':'test job', 
+                  'jobs': {'A':{name:'hello', executable:'echo x', javascript: {lib:'xyz'}}, 'B':{name:'b'} },
+                  'dependencies':[{'link1':{parent:['A'],child:['B']}}
+                                 ]};
+      var j;
+      try {
+        j = new job.Job(jid, config);
+      }
+      catch(err) {
+        should.exist(err);
+      }
+      should.not.exist(j);
+      done();
+    });
+
+    it('config - invalid javascript path', function(done) {
+      var jid = '12346';
+      var config={'name':'test job', 
+                  'jobs': {'A':{name:'hello', javascript: {lib:'xyz'}}, 'B':{name:'b'} },
+                  'dependencies':[{'link1':{parent:['A'],child:['B']}}
+                                 ]};
+      var j;
+      try {
+        j = new job.Job(jid, config);
+      }
+      catch(err) {
+        should.exist(err);
+      }
+      should.not.exist(j);
+      done();
+    });
+
+    it('config - invalid javascript method', function(done) {
+      var jid = '12346';
+      var config={'name':'test job', 
+                  'jobs': {'A':{name:'hello', javascript: {lib:'../examples/helloworld'}}, 'B':{name:'b'} },
+                  'dependencies':[{'link1':{parent:['A'],child:['B']}}
+                                 ]};
+      var j;
+      try {
+        j = new job.Job(jid, config);
+      }
+      catch(err) {
+        should.exist(err);
+      }
+      should.not.exist(j);
+      done();
+    });
+
+    it('config - different javascript method', function(done) {
+      var jid = '12346';
+      var config={'name':'test job', 
+                  'jobs': {'A':{name:'hello', javascript: {lib:'../examples/helloworld', method:'hello'}}, 'B':{name:'b', executable:'echo x'} },
+                  'dependencies':[{'link1':{parent:['A'],child:['B']}}
+                                 ]};
+      var j;
+      try {
+        j = new job.Job(jid, config);
+      }
+      catch(err) {
+        should.not.exist(err);
+      }
+      should.exist(j);
+      done();
+    });
+
+    it('isTaskReady', function(done) {
+      var jid = '12346';
+      var config={'name':'test job', 
+                  'jobs': {'A':{name:'hello',executable:'xyz'}, 'B':{name:'b',executable:'abc'} },
                   'dependencies':[{'link1':{parent:['A'],child:['B']}}
                                  ]
                  };
