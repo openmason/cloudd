@@ -1,0 +1,17 @@
+name: Hello World
+description:
+  Sample 'hello my world' job
+jobs:
+  my: 
+    executable: echo "my"
+  hello: 
+    executable: echo "hello"
+  world:
+    executable: echo "world"
+dependencies:
+  - my-world:
+     parent: [my]
+     child: [world]
+  - hello-my:
+     parent: [hello]
+     child: [my]
