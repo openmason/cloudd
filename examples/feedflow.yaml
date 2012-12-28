@@ -1,0 +1,27 @@
+name: Feed Workflow
+description:
+  Fetch list of articles from feeds & tag them.
+jobs:
+  fetch_feeds:
+    javascript:
+      lib: ../examples/tasks/feed
+  fetch_articles:
+    javascript:
+      lib: ../examples/tasks/article
+  filter_articles:
+    javascript:
+      lib: ../examples/tasks/filter
+  tag_save_article:
+    javascript:
+      lib: ../examples/tasks/tag
+
+dependencies:
+  - articles:
+     parent: [fetch_feeds]
+     child: [fetch_articles]
+  - new_articles:
+     parent: [fetch_articles]
+     child: [filter_articles]
+  - tag_articles:
+     parent: [filter_articles]
+     child: [tag_save_article]
