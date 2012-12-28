@@ -1,5 +1,5 @@
 exports.task = function(task, done) {
-  console.log('fetch articles');
+  console.log('filter articles');
   done();
 };
 
