@@ -80,3 +80,9 @@ Command line utilities
     # to submit a new job
     cloudd submit sample-job-file.yaml
     
+
+## Config file
+  * id's for the job and task cannot have '#'
+  * input is a field that would be passed to task
+
+

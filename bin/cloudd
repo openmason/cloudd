@@ -18,7 +18,7 @@ var winston = require('winston');
 // cloudd cron job-id "cron-str" job-config-file  - submit a new cron job
 
 winston.default.transports.console.level = 'info';
-var _versionString = 'cloudd v'+to.version + '\nnode.js cloud engine';
+var _versionString = 'cloudd v'+cloudd.version + '\nnode.js cloud engine';
 
 var cmdport = 'tcp://127.0.0.1:12345';
 var zmq = require('zmq');

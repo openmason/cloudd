@@ -223,14 +223,15 @@ describe('job', function() {
         should.exist(tsk);
         assert.equal(j.isComplete(), false);
         should.not.exist(j.fetch());
-        j.setTaskResult(tsk);
+        j.setTaskResult(tsk[0]);
         tsk = j.fetch();
         should.exist(tsk);
         assert.equal(j.isComplete(), false);
-        j.setTaskResult(tsk);
+        j.setTaskResult(tsk[0]);
         assert.equal(j.isComplete(), true);
       }
       catch(err) {
+        console.log(err);
         should.not.exist(err);
       }
       should.exist(j);

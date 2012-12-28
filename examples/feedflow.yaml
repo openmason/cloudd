@@ -5,6 +5,7 @@ jobs:
   fetch_feeds:
     javascript:
       lib: ../examples/tasks/feed
+    input: examples/tasks/feeds.yaml
   fetch_articles:
     javascript:
       lib: ../examples/tasks/article

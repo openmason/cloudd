@@ -1,4 +1,5 @@
-# release 0.2.1
+# release 0.2.2
+ * fan-out feature added (check feedconfig.yaml)
  * javascript modules can be loaded from job config
  * cloudd with new structures ready on npm
  * major change, kue is dropped and new data structures introduced

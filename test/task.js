@@ -16,7 +16,7 @@ describe('task', function() {
     it('without taskid', function(done) {
       var tid;
       try {
-        var t = new task.Task('123', tid, 'xyz', 'echo hello');
+        var t = new task.Task('123', tid, {name:'xyz', executable:'echo hello'});
         should.not.exist(t);
       }
       catch(err) {
@@ -27,7 +27,7 @@ describe('task', function() {
     it('without jobid', function(done) {
       var jid;
       try {
-        var t = new task.Task(jid, '123', 'xyz', 'echo hello');
+        var t = new task.Task(jid, '123', {name:'xyz', executable:'echo hello'});
         should.not.exist(t);
       }
       catch(err) {
@@ -36,7 +36,7 @@ describe('task', function() {
       done();
     });
     it('run failed', function(done) {
-      var t = new task.Task('abc', '123', 'xyz', 'unknown_cmd');
+      var t = new task.Task('abc', '123', {name:'xyz', executable:'unknown_cmd'});
       t.run(function(err) {
         should.exist(err);
         assert.equal(t.state, task.State.FAILED);
@@ -44,7 +44,7 @@ describe('task', function() {
       });
     });
     it('run complete', function(done) {
-      var t = new task.Task('abc', '123', 'xyz', 'echo hi');
+      var t = new task.Task('abc', '123', {name:'xyz', executable:'echo hi'});
       t.run(function(err) {
         should.not.exist(err);
         assert.equal(t.state, task.State.COMPLETE);
@@ -66,7 +66,7 @@ describe('task', function() {
     });
     it('add one task', function(done) {
       var tq = new task.TaskQ();
-      var t = new task.Task('abc', '123', 'xyz', 'echo hi');
+      var t = new task.Task('abc', '123', {name:'xyz', executable:'echo hi'});
       tq.add(t);
       assert.equal(tq.q.size(), 1);
       assert.equal(Object.keys(tq.runningTasks).length, 0);
@@ -82,9 +82,9 @@ describe('task', function() {
     });
     it('process on successfully', function(done) {
       var tq = new task.TaskQ();
-      var t = new task.Task('abc', '123', 'xyz', 'echo hi');
+      var t = new task.Task('abc', '123', {name:'xyz', executable:'echo hi'});
       tq.add(t);
-      var t1 = new task.Task('abc', '124', 'xyz', 'echo hi');
+      var t1 = new task.Task('abc', '124', {name:'xyz', executable:'echo hi'});
       tq.add(t1);
       assert.equal(tq.q.size(), 2);
       assert.equal(Object.keys(tq.runningTasks).length, 0);

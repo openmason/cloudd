@@ -1,0 +1,5 @@
+feeds:
+  bankrate: http://www.bankrate.com/syndication/Bankrate_TodaysStories.xml
+  bankratetop: http://www.bankrate.com/syndication/bankrate_topstory.xml
+  bankaholic: http://feeds.feedburner.com/Bankaholic
+  depositoaccts: http://feeds.feedburner.com/DepositAccounts?format=xml
