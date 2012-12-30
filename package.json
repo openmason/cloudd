@@ -2,14 +2,14 @@
   "name": "cloudd",
   "description": "node based job execution engine",
   "homepage": "https://github.com/openmason/cloudd",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": "el aras <openmason@gmail.com>",
   "dependencies": {
     "underscore": ">= 1.4.3",
     "winston"   : ">= 0.6.2",
     "sprintf"   : ">= 0.1.1",
     "cron"      : ">= 1.0.1",
-    "zmq"       : ">= 2.2.0",
+    "zmqrpc"    : ">= 0.0.6",
     "to"        : ">= 0.2.9",
     "handy"     : ">= 0.0.11"
   },

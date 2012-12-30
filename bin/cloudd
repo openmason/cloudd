@@ -21,36 +21,29 @@ winston.default.transports.console.level = 'info';
 var _versionString = 'cloudd v'+cloudd.version + '\nnode.js cloud engine';
 
 var cmdport = 'tcp://127.0.0.1:12345';
-var zmq = require('zmq');
+var zmqrpc = require('zmqrpc').Client;
 console.log(_versionString);
 var launch='none';
 if(process.argv.length>2) {
   launch = process.argv[2];
 }
 if(launch=='jobs' || launch=='ps' || launch=='tasks' || launch=='submit' || launch=='cron') {
-  var csocket = zmq.socket('req');
-  csocket.identity = 'client' + process.pid;
-  csocket.connect(cmdport);
-  var cmd = {command:launch};
-  if(launch=='submit') {
-    cmd['id']=process.argv[3];
-    cmd['config']=process.argv[4];
-  } else if(launch=='cron') {
-    cmd['cron']=process.argv[3];
-    cmd['id']=process.argv[4];
-    cmd['config']=process.argv[5];
-  }
-  csocket.send(JSON.stringify(cmd));
-  csocket.on('message', function(data) {
-    var objs = JSON.parse(data.toString());
-    switch(launch) {
-      case 'ps'   : _ps(objs); break;
-      case 'tasks': _tasks(objs); break;
-      case 'jobs' : _jobs(objs);break;
-      default     : console.log(objs.result); break;
+  var cloudobj = new zmqrpc(cmdport, function(error, res) {
+    if(error) {
+      console.log('***** Error: ' + error);
+    } else {
+      console.log(res.result);
     }
     process.exit(0);
   });
+  var cmd = {command:launch};
+  switch(launch) {
+    case 'submit': cloudobj.submit(process.argv[3], process.argv[4]); break;
+    case 'cron':   cloudobj.cron(process.argv[3], process.argv[4], process.argv[5]); break;
+    case 'ps':     cloudobj.ps(function(error, result) { _ps(result); process.exit(0); }); break;
+    case 'tasks':  cloudobj.tasks(function(error, result) { _tasks(result); process.exit(0); }); break;
+    case 'jobs':   cloudobj.jobs(function(error, result) { _jobs(result); process.exit(0); }); break;
+  }
 } else if(launch=='server') {
   cloudd.start(cmdport);
 } else {

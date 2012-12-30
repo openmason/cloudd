@@ -1,4 +1,5 @@
-# release 0.2.2
+# release 0.2.3
+ * switched to zmqrpc for cloud management
  * fan-out feature added (check feedconfig.yaml)
  * javascript modules can be loaded from job config
  * cloudd with new structures ready on npm
