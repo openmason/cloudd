@@ -2,7 +2,7 @@
   "name": "cloudd",
   "description": "node based job execution engine",
   "homepage": "https://github.com/openmason/cloudd",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "author": "el aras <openmason@gmail.com>",
   "dependencies": {
     "underscore": ">= 1.4.3",
