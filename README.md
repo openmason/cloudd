@@ -59,7 +59,7 @@ Have two terminals, one for the server and another one for submitting the job
     cloudd server
     
     # terminal 2
-    cloudd examples/hellomyworld.yaml
+    cloudd submit HW examples/hellomyworld.yaml
 
 ## Usage
 To run the server
@@ -78,11 +78,13 @@ Command line utilities
     cloudd jobs
     
     # to submit a new job
-    cloudd submit sample-job-file.yaml
+    cloudd submit job-id sample-job-file.yaml
+    
+    # to submit a cron job (say every 5 seconds)
+    cloudd cron "*/5 * * * * *" job-id sample-job-file.yaml
     
 
 ## Config file
   * id's for the job and task cannot have '#'
   * input is a field that would be passed to task
-
 

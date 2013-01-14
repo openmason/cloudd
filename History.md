@@ -1,4 +1,5 @@
-# release 0.2.4
+# release 0.2.5
+ * using event emitter for processing jobs
  * switched to zmqrpc for cloud management
  * fan-out feature added (check feedconfig.yaml)
  * javascript modules can be loaded from job config
